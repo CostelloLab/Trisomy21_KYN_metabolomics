@@ -3,6 +3,7 @@ require(plyr, quietly = T)
 require(RColorBrewer, quietly = T)
 library(ROCR)
 library(pROC)
+library(classInt)
 cols = brewer.pal(11, 'Spectral')
 
 LassoTally = function(train.dataset, pos.class.label, n.rounds = NULL, subset.train = F,
@@ -352,4 +353,62 @@ ReportPerfMetrics = function(predicted.labels, true.labels, pos.class){
               Accuracy = accuracy, 
               Precision = precision, 
               Recall = recall))
+}
+
+PlotROCWithCI = function(lasso_object){
+  spec <- c()
+  lowconf <- c()
+  upconf <- c()
+  minconf <- c()
+  maxconf <- c()
+  sens <-  sort(unique(classIntervals(lasso_object$ModSensitivities, 100)$brks))
+  t <- c()
+  prev = 0
+  for(i in sens) {
+    vals <- c()
+    if (i == 1) {
+      vals <- lasso_object$ModSpecificities[lasso_object$ModSensitivities > prev & lasso_object$ModSensitivities <= i]
+    } else {
+      vals <- lasso_object$ModSpecificities[lasso_object$ModSensitivities >= prev & lasso_object$ModSensitivities < i]
+    }
+    t <- c(t, length(vals))
+    tempup <- c()
+    tempdown <- c()
+    maxconf <- c(maxconf, max(vals, na.rm = T))
+    minconf <- c(minconf, min(vals, na.rm = T))
+    for (j in 1:1000) {
+      vals2 <- sample(vals,round(length(vals)*0.8),replace=T)
+      tempup <- c(tempup, quantile(vals2, probs=0.975))
+      tempdown <- c(tempdown, quantile(vals2, probs=0.025))
+    }
+    spec <- c(spec, mean(vals))
+    lowconf <- c(lowconf, mean(tempdown))
+    upconf <- c(upconf, mean(tempup))
+    prev = i
+  }
+  lowconf <- lowconf[-1]
+  lowconf <- c(lowconf,0)
+  upconf <- upconf[-1]
+  upconf <- c(upconf,0)
+  spec <- spec[-1]
+  spec <- c(spec,0)
+  plot(1-spec, sens, type='l', ylim=c(0,1), xlim=c(0,1), col='white',
+       xlab = 'False positive rate', ylab = 'True positive rate', las = 1)
+  lines(1 - upconf, sens)
+  lines(1 - lowconf, sens)
+  #lines(1 - maxconf, sens)
+  #lines(1 - minconf, sens)
+  segments(0,0,1,1,col="grey")
+  
+  smooth.roc <- smooth.spline((1-spec),sens, spar=0.35)
+  smooth.up <- smooth.spline((1-upconf),sens, spar=0.5)
+  smooth.down <- smooth.spline((1-lowconf),sens, spar=0.5)
+  lines(smooth.up)
+  lines(smooth.down)
+  lines(smooth.roc)
+  
+  #plot(1-spec, sens, pch=20, ylim=c(0,1), xlim=c(0,1))
+  
+  points(1-upconf, sens, col="red", pch=20)
+  points(1-lowconf, sens, col="red", pch=20)
 }

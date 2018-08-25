@@ -6,7 +6,7 @@
 # Annotates metabolites in the human metabolomics eset to Kegg pathways and
 # calculates p-values based on a hypergeometric test.
 #
-# Saves enrichment plot in the Results/Figure1/ folder.
+# Saves enrichment plot in the Results/Figure_1/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions

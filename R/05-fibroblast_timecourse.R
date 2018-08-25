@@ -1,18 +1,21 @@
 # -----------------------------------------------------------------------------
-# Script 05: T21 and D21 Fibroblast Metabolomics Timecourse
+# Script 05: T21 and D21 Fibroblast Metabolomics Flux Timecourse
 # Author: Rani Powers
 # Last updated: August 1, 2018
 #
-# Saves line plots in the Results/Figure_4/ folder.
+# Removes batch effects in the fibroblast flux experiments and plots data
+# from the tryptophan pathway-targeted metabolomics timecourse. 
+#
+# Saves D21 and T21 line plots in the Results/Figure_4/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
 source('R/helpers.R')
+if (!dir.exists('Results/Figure_4')) { dir.create('Results/Figure_4', recursive = T) }
 
-# Data for 3 experiments (called 4, 5 and 6) cells
-dat = read.csv('Data/Fibroblast_flux_metabolomics.csv',
+# Data for 3 experiments (called A, B and C) cells and supernatant
+dat = read.csv('Data/Human_fibroblast_flux.csv',
                stringsAsFactors = F)
-names(dat) = gsub('\\.', '_', names(dat))
 names(dat) = gsub('X5', '5', names(dat))
 names(dat) = gsub('X3', '3', names(dat))
 
@@ -49,7 +52,7 @@ sd_all = function(x, df){
   return(out)
 }
 agg = function(x, df){
-  # Collapse the Expt 4, 5, 6 replicates for each cell line
+  # Collapse the Expt A, B, C replicates for each cell line
   # We end up with n = 6 means (from the 6 cell lines) per treatment and timepoint
   out = aggregate(get(x) ~ Timepoint + Treatment + Cell_Line + Karyotype, data = df, FUN = mean)
   names(out)[ncol(out)] = x

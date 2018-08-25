@@ -1,15 +1,16 @@
 # -----------------------------------------------------------------------------
 # Script 06: Human Plasma Metabolites & MSD Cytokines
 # Author: Rani Powers
-# Last updated: August 1, 2018
+# Last updated: August 20, 2018
 #
-# Correlates HTP human plasma metabolomics data with MSD cytokine measurements.
-# Saves heatmaps and scatterplots in the Results/Figure_5/ folder.
+# Correlates Cohort 2 human plasma metabolomics data with MSD cytokine measurements.
+# Saves heatmaps and scatterplots in the Results/Figure_6/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
 source('R/helpers.R')
 source('R/heatmap.3.R')
+if (!dir.exists('Results/Figure_6')) { dir.create('Results/Figure_6', recursive = T) }
 
 # Get HTP metabolomics data
 eset = readRDS('Data/Human_plasma_metabolomics_filtered.rds')
@@ -55,7 +56,7 @@ d21_corr_s = cor(data_for_correlation[d21,],
 # Plot just kynurenine vs all cytokines, ranked
 kyn_cor_t21 = sort(t21_corr_s['C00328', 92:ncol(t21_corr_s)], 
                    decreasing = T)
-pdf('Results/Figure_5/Fig5_kyn_heatmap.pdf',
+pdf('Results/Figure_6/Fig6_kyn_heatmap.pdf',
     height = 10, width = 6)
 plot_single_row_heatmap(data_vector = kyn_cor_t21, karyotype = 'T21', 
                         column_label = 'kynurenine', n = length(t21))
@@ -65,7 +66,7 @@ dev.off()
 top2_kyn = names(kyn_cor_t21)[1:2]
 data_for_correlation = as.data.frame(data_for_correlation)
 for (cyto in top2_kyn){
-  pdf(paste0('Results/Figure_5/Fig5_kyn_', cyto, '.pdf'), 
+  pdf(paste0('Results/Figure_6/Fig6_kyn_', cyto, '.pdf'), 
       height = 6, width = 6)
   par(mar = c(8,4,3,2))
   plot_msd_met_scatterplot(met1 = 'C00328', met2 = cyto, plot_fit = F, 
@@ -76,7 +77,7 @@ for (cyto in top2_kyn){
 # Plot just quinolinic acid vs all cytokines, ranked
 quin_cor_t21 = sort(t21_corr_s['C03722', 92:ncol(t21_corr_s)], 
                    decreasing = T)
-pdf('Results/Figure_5/Fig5_quin_heatmap.pdf',
+pdf('Results/Figure_6/Fig6_quin_heatmap.pdf',
     height = 10, width = 6)
 plot_single_row_heatmap(data_vector = quin_cor_t21, karyotype = 'T21', 
                         column_label = 'quinolinic acid', n = length(t21))
@@ -85,7 +86,7 @@ dev.off()
 # Plot top 2 scatterplots with quinolinic acid
 top2_quin = names(quin_cor_t21)[1:2]
 for (cyto in top2_quin){
-  pdf(paste0('Results/Figure_5/Fig5_quin_', cyto, '.pdf'), 
+  pdf(paste0('Results/Figure_6/Fig6_quin_', cyto, '.pdf'), 
       height = 6, width = 6)
   par(mar = c(8,4,3,2))
   plot_msd_met_scatterplot(met1 = 'C03722', met2 = cyto, plot_fit = F, 

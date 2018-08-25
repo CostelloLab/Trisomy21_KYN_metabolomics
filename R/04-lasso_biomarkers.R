@@ -4,19 +4,26 @@
 # Last updated: August 1, 2018
 #
 # Removes batch effects from Nexus & HTP metabolomics data and plots ROC with 
-# each metabolite as an individual predictor in the Results/Figure2/ folder.
+# each metabolite as an individual predictor in the Results/Figure_2/ folder.
 #
-# For multivariate analysis, this script then imputes missing within each 
-# karyotype, z-scores the whole data set, and uses 10,000 CV lasso models to
-# plot coefficients of the most frequently selected features.
+# For multivariate analysis, this script then imputes missing data within each 
+# karyotype, z-scores the whole data set, and uses NROUNDS (10,000) CV lasso
+# models to plot distribution of coefficients of the most frequently selected 
+# features.
 # 
-
+# A metabolic signature of trisomy 21 is learned and the ROC plot is saved to
+# the Results/Figure_2/ folder.
+#
+# NOTE: Setting NROUNDS to 10,000 (the number of models used in our paper) will
+# result in this script running for a few hours. To decrease run time, set
+# NROUNDS to lower number, e.g. 1000.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
+if (!dir.exists('Results/Figure_2')) { dir.create('Results/Figure_2', recursive = T) }
 source('R/helpers.R')
 source('R/lasso.R')
-NROUNDS = 100
+NROUNDS = 1000
 
 # Use the removeBatchEffect data instead of residuals
 eset = readRDS('Data/Human_plasma_metabolomics_filtered.rds')
@@ -125,8 +132,9 @@ hist(mean_auc)
 mean(mean_auc)
 
 # --------------------------- MULTIVARIATE ROC --------------------------------
+
 # ROC plot for biomarker lasso models
 pdf('Results/Figure_2/Fig2C.pdf',
     height = 10, width = 10)
-# TODO
+PlotROCWithCI(biomarker_lasso_result)
 dev.off() 
