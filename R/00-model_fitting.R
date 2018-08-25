@@ -9,14 +9,15 @@
 # Identifies and filters two outlier samples.
 #
 # Saves density and PCA plots from pre- and post-adjustment (batch, age, sex)
-# in the Results/Figure1/ folder.
+# in the Results/Figure_1/ folder.
 # 
-# Fits linear model to data with batch, age and gender as covariates. Saves the
+# Fits linear model to data with batch, age and sex as covariates. Saves the
 # model residuals in a new eset (Human_plasma_residuals.rds).
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
 source('R/helpers.R')
+if (!dir.exists('Results/Figure_1')) { dir.create('Results/Figure_1', recursive = T) }
 
 # Read in human metabolomics data from Nexus and HTP cohorts
 eset = readRDS('Data/Human_plasma_metabolomics.rds')

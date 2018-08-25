@@ -7,7 +7,7 @@
 # analysis for Nexus cohort alone, HTP cohort alone, and both cohorts combined
 # (linear model fit for batch, age, and sex from 00-model_fitting.R).
 #
-# Saves volcano plots in the Results/Figure1/ folder.
+# Saves volcano plots in the Results/Figure_1/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions

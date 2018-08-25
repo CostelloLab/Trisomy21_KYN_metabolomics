@@ -3,13 +3,14 @@
 # Author: Rani Powers
 # Last updated: July 31, 2018
 #
-# Saves boxplots for most differentially abundant metabolites are saved in the 
-# Results/Figure1/ folder. Additional boxplots for tryptophan biosynthesis and
-# catabolism pathways are saved in the Results/Figure3/ folder.
+# Saves boxplots for most differentially abundant metabolites in the 
+# Results/Figure_1/ folder. Additional boxplots for tryptophan biosynthesis and
+# catabolism pathways are saved in the Results/Figure_3/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
 source('R/helpers.R')
+if (!dir.exists('Results/Figure_3')) { dir.create('Results/Figure_3', recursive = T) }
 
 # Get the model residuals for the 91 metabolites
 met_data = readRDS('Data/Human_plasma_residuals.rds')

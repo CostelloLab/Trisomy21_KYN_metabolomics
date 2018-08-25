@@ -48,25 +48,6 @@ not_found
 missing = feature_data$Compound_ID[!feature_data$Compound_ID %in% names(l)]
 # feature_data[missing,]  # mainly carnitines and gamma glutamyls
 
-# For the 4 found in KEGG that didn't have pathway annotations
-# We can optionally include them...
-
-# Hexanoic acid
-#l$C01585 = 'None'
-#names(l$C01585) = 'No pathways'
-
-# C02796 - 3-Methyleneoxindole (the weird non-tryp pathway metabolite)
-#l$C02796 = 'None'
-#names(l$C02796) = 'No pathways'
-
-# C05283 - (5-L-Glutamyl)-L-glutamine
-#l$C05283 = 'None'
-#names(l$C05283) = 'No pathways'
-
-# C03738 - gamma-L-Glutamyl-D-alanine
-#l$C03738 = 'None'
-#names(l$C03738) = 'No pathways'
-
 # Save pathway names their Kegg pathway IDs
 all_annotations = unlist(l)
 names(all_annotations) = gsub('C[0-9]+\\.', '', names(all_annotations))

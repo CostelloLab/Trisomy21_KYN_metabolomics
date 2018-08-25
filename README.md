@@ -32,7 +32,7 @@ Joaquin M. Espinosa: joaquin.espinosa@ucdenver.edu
 
 To ensure reproducibility, all data for this project can be found in the Data/ directory and the R code to generate all figures can be found in the R/ directory. Descriptions for each data file and R script are below.
 
-#### Data/
+#### Data
 
 * **Human_plasma_metabolomics.csv** - Cohort 1 and Cohort 2 participant characteristics and raw intensity values (relative abundance) from semi-targeted LC-MS plasma metabolomics
 * **Human_plasma_metabolomics.csv** - Same data as Human_plasma_metabolomics.csv formatted as an R [eset](https://www.bioconductor.org/packages/3.7/bioc/vignettes/Biobase/inst/doc/ExpressionSetIntroduction.pdf) object
@@ -40,7 +40,24 @@ To ensure reproducibility, all data for this project can be found in the Data/ d
 * **Human_fibroblast_flux.csv** - Targeted LC-MS flux metabolomics data for timecourse experiment on human fibroblasts
 * **Mouse_plasma_metabolomics.csv** - Targeted LC-MS metabolomics data on plasma from D21 and T21 (Dp10, Dp16 and Dp17) mice
 
-#### R/
+#### Code
+
+To reproduce the figures from this project, first make sure you have all dependencies installed the run each of the numbered R scripts in order. These scripts will create a folder called Results/ and each script will output plots and/or tables to an appropriate subfolder named for each figure (e.g. Result/Figure_1/). General descriptions of each script are below, and additional information can be found in the headers of the scripts themselves.
+
+Dependencies:
+
+* plyr (>= 1.8.4), tidyr (>= 0.8.0), dplyr (>= 0.7.4)
+* affy (>= 1.54.0), Biobase (>= 2.36.2), preprocessCore (>= 1.38.1)
+* impute (>= 1.50.1), limma (>= 3.32.10), glmnet (>= 2.0-13)
+* RColorBrewer (>= 1.1-2), beeswarm (>= 0.2.3)
+* ROCR (>= 1.0-7), pROC (>= 1.10.0)
+
+R Scripts:
+
+* **00-model_fitting.R** - pre-processes human metabolomics data and fits linear model with batch, age and sex covariates. Saves plots for Figure 1 figure supplement 2 in the Results/Figure_1/ folder.
+* **01-differential_abundance.R** - performs differential abundance analysis on human plasma samples. Saves plots for Figure 1 and Figure 1 figure supplement 1 in the Results/Figure_1/ folder.
+* **02-pathway_enrichment.R** - performs hypergeometric testing for pathway enrichment on human plasma samples. Saves plot for Figure 1 and supplemental table of results in the Results/Figure_1/ folder.
+* **03-boxplots_t21_vs_d21** - plots boxplots of differentially abundant metabolites, tryptophan pathway metabolites and metabolite ratios. Saves results in the Results/Figure_1 and Results/Figure_3 folders.
 
 
 
