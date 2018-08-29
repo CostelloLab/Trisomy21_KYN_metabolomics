@@ -1,6 +1,6 @@
 ## Trisomy 21 drives production of neurotoxic tryptophan catabolites via the interferon-inducible kynurenine pathway
 
-Our preprint is available on biorXiv [here](https://www.biorxiv.org/).
+Our preprint is available on bioRxiv [here](https://www.biorxiv.org/content/early/2018/08/29/403642).
 
 **Authors:**
 
