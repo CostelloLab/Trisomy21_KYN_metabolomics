@@ -74,7 +74,7 @@ nexus_sigtable = join(nexus_sigtable, unmod_df2[,c(3,5,2,4)])
 # Save Cohort 1 only data
 nexus_sigtable = nexus_sigtable[order(nexus_sigtable$Unmod_adjP_withCovars, decreasing = F),]
 write.table(nexus_sigtable, 'Results/Supplementary_Files/Supp_Data_2b_cohort_1_only.csv',
-            sep = ',', row.names = F, quote = F)
+            sep = ',', row.names = F)
 
 # ------------------------ COHORT 2 NO FITTING --------------------------------- 
 
@@ -125,7 +125,7 @@ htp_sigtable = join(htp_sigtable, unmod_df2[,c(3,5,2,4)])
 # Save Cohort 1 only data
 htp_sigtable = htp_sigtable[order(htp_sigtable$Unmod_adjP_withCovars, decreasing = F),]
 write.table(htp_sigtable, 'Results/Supplementary_Files/Supp_Data_2c_cohort_2_only.csv',
-            sep = ',', row.names = F, quote = F)
+            sep = ',', row.names = F)
 
 # ----------------------- COHORT 1 & 2 BATCH FIT ONLY -------------------------- 
 
@@ -176,10 +176,10 @@ unmod_df2$Unmod_adjP_withCovars = p.adjust(unmod_df2$Unmod_Pvalue_withCovars, me
 unmod_df2 = join(unmod_df2, both_fit)
 both_sigtable = join(both_sigtable, unmod_df2[,c(3,5,2,4)])
 
-# Save Cohort 1 only data
+# Save Cohort 1 and 2 only data
 both_sigtable = both_sigtable[order(both_sigtable$Unmod_adjP_withCovars, decreasing = F),]
-write.table(both_sigtable, 'Results/Supplementary_Files/Supp_Data_2a_cohort_1_and_2_.csv',
-            sep = ',', row.names = F, quote = F)
+write.table(both_sigtable, 'Results/Supplementary_Files/Supp_Data_2a_cohort_1_and_2.csv',
+            sep = ',', row.names = F)
 
 # ------------------------- COHORT 1 & 2 PLOTTING ------------------------------ 
 
