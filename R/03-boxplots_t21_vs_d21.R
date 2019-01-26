@@ -104,7 +104,29 @@ for (met in supp_fig1c_metabolites){
       height = 5, width = 5)
   if (met_sigtable[met, 'log2FC_withCovars'] < 0 & met_sigtable[met, 'adj.P.Val'] <= FDR_CUTOFF){
     cols_to_use = c(dark_blue, light_blue)
-  } else if (met_sigtable[met, 'log2FC'] > 0 & met_sigtable[met, 'adj.P.Val'] <= FDR_CUTOFF){
+  } else if (met_sigtable[met, 'log2FC_withCovars'] > 0 & met_sigtable[met, 'adj.P.Val'] <= FDR_CUTOFF){
+    cols_to_use = c(dark_red, light_red)
+  } else{
+    cols_to_use = c('#515151', '#A0A0A0')
+  }
+  plot_boxplot(met, data_for_boxplots, feature_data, 
+               point_borders = 'black',
+               ylab = 'batch, age and sex adjusted intensity',
+               col1 = cols_to_use[1], col2 = cols_to_use[2])
+  dev.off()
+}
+
+# Plot boxplots for all Supp Fig 2 metabolites
+supp_fig1c_metabolites = c('C00780', 'C00078', 'C00463', 
+                           'C05635', 'C00954', 'C00637',
+                           'C00108', 'C10164', 'C03453')
+for (met in supp_fig1c_metabolites){
+  met_name = gsub(' |/', '_', met_sigtable[met, 'Compound_Name'])
+  pdf(paste0('Results/Supplementary_Figures/Supp_Fig_2a_boxplot_', met_name, '.pdf'),
+      height = 5, width = 5)
+  if (met_sigtable[met, 'log2FC_withCovars'] < 0 & met_sigtable[met, 'adj.P.Val'] <= FDR_CUTOFF){
+    cols_to_use = c(dark_blue, light_blue)
+  } else if (met_sigtable[met, 'log2FC_withCovars'] > 0 & met_sigtable[met, 'adj.P.Val'] <= FDR_CUTOFF){
     cols_to_use = c(dark_red, light_red)
   } else{
     cols_to_use = c('#515151', '#A0A0A0')
