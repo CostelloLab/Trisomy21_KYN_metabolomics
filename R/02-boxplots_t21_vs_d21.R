@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Script 03: Human Plasma T21 vs D21 Boxplots
+# Script 02: Human Plasma T21 vs D21 Boxplots
 # Author: Rani Powers
 # Last updated: Dec 11, 2018
 #
