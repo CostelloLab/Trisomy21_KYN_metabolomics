@@ -30,8 +30,9 @@ dark_red = cols[1]
 light_red = '#d48daa'
 
 # Heatmap palette
-heatmap_palette = colorRampPalette(c(cols[9], cols[9], 'white', cols[11], cols[11]))(n = 100)
+heatmap_palette = colorRampPalette(c(rep(cols[10], 3), 'black', rep(cols[1], 3)))(n = 100)
 spearman_breaks = seq(-1, 1, length=101)
+zscore_breaks = seq(-4, 4, length=101)
 
 # --------------------------------- PLOTS ----------------------------------- #
 
@@ -131,9 +132,9 @@ plot_boxplot = function(metabolite, df, feature_data, ylim = NULL, ylab = '',
           ylim = ylim,
           col = 'lightgrey',
           sub = paste0('unadjusted p = ',
-                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'P.Value'], 6),
+                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'P.Value'], 10),
                        '\nFDR-adjusted p = ',
-                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'adj.P.Val'], 6)))
+                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'adj.P.Val'], 10)))
   if (point_borders == 'black'){
     beeswarm(get(metabolite)~Karyotype, data = df,
              pch = 21,
