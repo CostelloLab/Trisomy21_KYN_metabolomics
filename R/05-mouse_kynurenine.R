@@ -4,10 +4,9 @@
 # Last updated: December 23, 2018
 #
 # Plots basal kynurenine levels in WT, Dp10, Dp16 and Dp17 mouse strains and
-# calculates statistical significance. Plots kynurenine levels in Dp16 D21 and
-# T21 mice with and without poly(I:C) treatment.
+# calculates statistical significance.
 #
-# Saves plots in the Results/Figure_5/ folder.
+# Saves plots in the Results/Figure_4/ folder.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions

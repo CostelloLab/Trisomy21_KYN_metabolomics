@@ -9,7 +9,7 @@
 #
 # Outputs:
 # 1) Saves Fig 1a volcano plot for combined Cohort 1 & 2 data in the 
-# Results/Figure1/ directory
+# Results/Figure_1/ directory
 #
 # 2) Saves the differential abundance results for Cohort 1 alone, Cohort 2
 # alone, and both combined in Results/Supplementary_Files/Supp_Data_2...txt

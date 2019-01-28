@@ -44,12 +44,9 @@ To ensure reproducibility, all data for this project can be found in the Data di
 
 #### Data
 
-* **human_plasma_metabolomics.csv** - Cohort 1 and Cohort 2 participant characteristics and raw, LC-MS plasma metabolomics intensity values (relative abundance)
-* **human_plasma_metabolomics_eset.rds** - Same data as Human_plasma_metabolomics.csv formatted as an R [eset](https://www.bioconductor.org/packages/3.7/bioc/vignettes/Biobase/inst/doc/ExpressionSetIntroduction.pdf) object
-* **human_plasma_MSD.csv** - Mesoscale discovery assay data from Cohort 2 human plasma samples
-* **human_fibroblast_flux.csv** - Targeted metabolic flux data from timecourse experiment on human fibroblasts with IFN-α stimulation
-* **human_fibroblast_flux_KO.csv** - Targeted metabolic flux data from timecourse experiment on human fibroblasts with IFNAR knockout and IFN-α stimulation
-* **Mouse_plasma_metabolomics.csv** - Targeted metabolomics data on plasma from WT and T21 (Dp10, Dp16 and Dp17 strains) mice
+* **human_plasma_metabolomics_eset.rds** - Cohort 1 and Cohort 2 participant characteristics and raw, LC-MS plasma metabolomics intensity values (relative abundance) formatted as an R [eset](https://www.bioconductor.org/packages/3.7/bioc/vignettes/Biobase/inst/doc/ExpressionSetIntroduction.pdf)
+* **human_MSD_data.rds** - Mesoscale discovery assay data from Cohort 2 human plasma samples
+* **mouse_metabolomics_data.rds** - Targeted metabolomics data on plasma from WT and T21 (Dp10, Dp16 and Dp17 strains) mice
 
 #### Code
 
@@ -65,12 +62,10 @@ Dependencies:
 
 R Scripts:
 
-* **00-model_fitting.R** - pre-processes human metabolomics data and fits linear model with batch, age and sex covariates. Saves density plots for Supplementary Figure 1b-c in the Results/Supplementary_Figures directory.
-* **01-differential_abundance.R** - performs differential abundance analysis on human plasma samples. Saves plots for Figure 1A and Figure 1 figure supplement 1B-C in the Results/Figure_1 directory.
-* **02-pathway_enrichment.R** - performs hypergeometric testing for pathway enrichment on human plasma samples. Saves plot for Figure 1C and supplemental table of results in the Results/Figure_1 directory.
-* **03-boxplots_t21_vs_d21** - plots boxplots of differentially abundant metabolites, tryptophan pathway metabolites and metabolite ratios. Saves plots for Figure 1B, Figure 3, and Figure 3 supplement 1 in the Results/Figure_1 and Results/Figure_3 directories.
-* **04-lasso_biomarker.R** - performs univariate and multivariate biomarker analysis to learn a metabolic signature of trisomy 21. Saves plots for Figure 2A-C in the Results/Figure_2 directory.
-* **05-fibroblast_timecourse.R** - pre-processes and plots timecourse data from the flux metabolomics experiment on human fibroblasts. Saves plots for Figure 4A-C and Figure 4 figure supplement 1A-D in the Results/Figure_4 directory.
-* **06-cytokine_correlations.R** - correlates kynurenine and quinolinic acid in human plasma with Mesoscale Discovery assay data. Saves plots for Figure 6 in the Results/Figure_6 directory.
-* **07-mouse_kynurenine.R** - plots kynurenine levels in mouse plasma with and without treatment with poly(I:C). Saves plots for Figure 5 in the Results/Figure_5 directory.
+* **00-model_fitting.R** - Pre-processes human metabolomics data and fits linear model with batch, age and sex covariates. Saves density plots for Supplementary Figure 1b-c in the Results/Supplementary_Figures directory.
+* **01-differential_abundance.R** - Performs differential abundance analysis on human plasma samples from D21 and T21 individuals. Saves plot for Figure 1a in the Results/Figure_1 directory and data tables in the Results/Supplementary_Files/ directory.
+* **02-boxplots_t21_vs_d21** - Saves boxplots for kynurenine, quinolinic acid, KYN/TRP, and QA/PA ratios in the Results/Figure_1/ folder. Additional boxplots for Supp Figure 1 are saved in the Results/Supplementary_Figures/ folder.
+* **03-cytokine_correlations.R** - Correlates Cohort 2 human plasma metabolomics data with MSD cytokine measurements. Saves heatmaps and scatterplots in the Results/Figure_2/ folder. Outputs supplementary data to Results/Supplementary_Files/.
+* **04-fibroblast_timecourse.R** - Pre-processes and plots timecourse data from the flux metabolomics experiment on human fibroblasts. Saves plots for Figure 3 in the Results/Figure_3 directory.
+* **05-mouse_kynurenine.R** - Plots basal kynurenine levels in WT, Dp10, Dp16 and Dp17 mouse strains and calculates statistical significance. Saves plots in the Results/Figure_4/ folder.
 
