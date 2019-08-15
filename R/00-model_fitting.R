@@ -7,14 +7,18 @@
 # batch-adjustment using linear model.
 #
 # Outputs:
-# 1) Saves supplementary density plots from pre- and post-adjustment (batch, age, sex)
-# in the Results/Supplementary_Figures/ folder.
-# 
-# 2) Saves Data/Human_plasma_metabolomics_eset_filtered.rds - eset with the raw
+# 1) Saves Data/Human_plasma_metabolomics_eset_filtered.rds - eset with the raw
 # data after the filtering steps described above.
 #
-# 3) Saves Data/Human_plasma_metabolomics_eset_filtered_adjusted.rds - eset with 
+# 2) Saves Data/Human_plasma_metabolomics_eset_filtered_adjusted.rds - eset with 
 # the adjusted data after age/sex/batch adjustment.
+#
+# 3) Saves supplementary density plots from pre- and post-adjustment (batch, age, sex)
+# in the Results/Supplementary_Figures/ folder.
+# 
+# 4) Saves Results/Supplementary_Files/Supplementary_Data_1.csv with cohort 
+# details and Results/Supplementary_Files/Supplementary_Data_2.csv with raw 
+# metabolomics data
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
@@ -104,3 +108,22 @@ eset = new("ExpressionSet",
            phenoData = PHENO_DATA, 
            featureData = FEATURE_DATA)
 saveRDS(eset, 'Data/Human_plasma_metabolomics_eset_filtered_adjusted.rds')
+
+# Save supplementary files
+supp_cohort_data = sample_data[,c('Barcode', 'Sex', 'Age', 'Karyotype')]
+names(supp_cohort_data)[1] = 'Sample_ID'
+write.table(supp_cohort_data, 
+            'Results/Supplementary_Files/Supplementary_Data_1AB.csv',
+            sep = ',', row.names = F)
+
+supp_met_data2 = cbind(feature_data[,1:5],
+                       met_data[,sample_data$Batch == 1])
+write.table(supp_met_data2,
+            'Results/Supplementary_Files/Supplementary_Data_2.csv',
+            sep = ',', row.names = F)
+
+supp_met_data3 = cbind(feature_data[,c(1:2,6:8)],
+                       met_data[,sample_data$Batch == 2])
+write.table(supp_met_data3,
+            'Results/Supplementary_Files/Supplementary_Data_3.csv',
+            sep = ',', row.names = F)
