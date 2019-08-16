@@ -229,3 +229,82 @@ plot_msd_met_scatterplot = function(met1, met2, df, t21, d21, plot_fit = F){
            pch = c(19, 19), col = c(cols[2], 'black'))
   }
 }
+
+# More colors
+up_down_cols = list(light_red = '#D48DAA', dark_red = '#9E0142',
+                    light_blue = '#72AECC', dark_blue = '#3288BD')
+get_pval_cols = function(qval, direction){
+  if (qval < .05){
+    if (direction == 'Up'){
+      plot_cols = c(up_down_cols$light_red, up_down_cols$dark_red)
+    } else{
+      plot_cols = c(up_down_cols$light_blue, up_down_cols$dark_blue)
+    }
+  } else {
+    plot_cols = 'darkgrey'
+  }
+  return(plot_cols)
+}
+
+# Plots
+plot_t21_d21_boxplot <- function(df, compound, qval, direction, log = F, 
+                                 zero_log_threshold = 1e-4, exclude_zeros = F,
+                                 plot_main = NA, plot_ylab = NA, plot_sub = NA){
+  # df is a 2-column df with column names: Karyotype, <compound>
+  if (is.na(plot_main)){
+    plot_main = compound
+  }
+  if (is.na(plot_ylab)){
+    plot_ylab = compound
+  }
+  if (is.na(plot_sub)){
+    plot_sub = ''
+  }
+  
+  # Determine whether there are any samples with zero values
+  tab = as.data.frame(table(df$Karyotype, df[,compound] == 0))
+  d21_zeros = tab[tab$Var1 == 'D21' & tab$Var2 == 'TRUE', 'Freq']
+  t21_zeros = tab[tab$Var1 == 'T21' & tab$Var2 == 'TRUE', 'Freq']
+  
+  # Optionally exclude or threshold the zeros when showing data on log scale
+  phrase_end = ')'
+  if (log){
+    plot_log = 'y'
+    
+    # Calculate y axis limits
+    ymin = ifelse((min(df[,compound], na.rm = T)-(0.5*sd(df[,compound], na.rm = T))) <= 0,
+                  zero_log_threshold,
+                  (min(df[,compound], na.rm = T)-(0.5*sd(df[,compound], na.rm = T))))
+    ylimits = c(ymin, (max(df[,compound], na.rm = T)+sd(df[,compound], na.rm = T)))
+    
+    if (exclude_zeros){
+      df[,compound][df[,compound] == 0] = NA
+      phrase_end = ' excluded)'
+    } else{
+      df[,compound][df[,compound] == 0] = zero_log_threshold
+    }
+    
+  } else{
+    plot_log = ''
+    ylimits = c((min(df[,compound], na.rm = T)-sd(df[,compound], na.rm = T)), 
+                (max(df[,compound], na.rm = T)+sd(df[,compound], na.rm = T)))
+  }
+  
+  boxplot(get(compound) ~ Karyotype, data = df, outline = F, ylim = ylimits,
+          las = 1, col = 'lightgrey', log = plot_log,
+          main = plot_main, ylab = plot_ylab, sub = plot_sub)
+  beeswarm(get(compound) ~ Karyotype, data = df, add = T,
+           pch = 16, col = get_pval_cols(qval, direction))
+  
+  # Add text under the x axis if some samples had zero values
+  if (length(d21_zeros) > 0){
+    mtext(text = paste0('(n = ', d21_zeros,
+                        ' zero values', phrase_end), 
+          side = 1, at = 1, line = 2, cex = .75)
+  }
+  if (length(t21_zeros) > 0){
+    mtext(text = paste0('(n = ', t21_zeros,
+                        ' zero values', phrase_end), 
+          side = 1, at = 2, line = 2, cex = .75)
+  }
+}

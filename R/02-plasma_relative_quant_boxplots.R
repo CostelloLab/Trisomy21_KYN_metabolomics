@@ -11,7 +11,7 @@
 source('R/helpers.R')
 FDR_CUTOFF = .05
 
-# Get the model residuals and raw data for the 91 metabolites
+# Get the raw data for the 91 metabolites
 eset = readRDS('Data/Human_plasma_metabolomics_eset_filtered.rds')
 met_raw = as.data.frame(t(exprs(eset)))
 sample_data = pData(eset)
