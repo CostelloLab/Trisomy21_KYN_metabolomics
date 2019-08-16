@@ -63,7 +63,7 @@ plot_batch_pca = function(pca_summary, main = '', legend_side = 'topleft',
 }
 
 # Volcano plotting function
-plot_volcano = function(x, y, main = '', xlab = 'log2FC', ylab = '-log10 adj p',
+plot_volcano = function(x, y, main = '', xlab = 'log2 FC', ylab = '-log10 adj p',
                         x_cutoffs = log2(c(.8, 1.2)), las = 1,
                         y_cutoff = -log10(.01), plot_fc_lines = T,
                         up_col = '#9E0142', down_col = '#3288BD',
@@ -116,7 +116,8 @@ plot_volcano = function(x, y, main = '', xlab = 'log2FC', ylab = '-log10 adj p',
 # Boxplot function
 plot_boxplot = function(metabolite, df, feature_data, ylim = NULL, ylab = '',
                         point_borders = 'none',  # c('black', 'color', 'none')
-                        col1 = '#013c7c', col2 = '#9cb7d9'){
+                        col1 = '#013c7c', col2 = '#9cb7d9',
+                        pval_column = 'P.Value', qval_column = 'adj.P.Val'){
   met_name = feature_data[metabolite, 'Compound_Name']
   y_max = max(as.numeric(df[,metabolite]), na.rm = T)
   y_min = min(as.numeric(df[,metabolite]), na.rm = T)
@@ -132,9 +133,9 @@ plot_boxplot = function(metabolite, df, feature_data, ylim = NULL, ylab = '',
           ylim = ylim,
           col = 'lightgrey',
           sub = paste0('unadjusted p = ',
-                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'P.Value'], 10),
+                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, pval_column], 10),
                        '\nFDR-adjusted p = ',
-                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, 'adj.P.Val'], 10)))
+                       round(met_sigtable[met_sigtable$Compound_ID == metabolite, qval_column], 10)))
   if (point_borders == 'black'){
     beeswarm(get(metabolite)~Karyotype, data = df,
              pch = 21,
