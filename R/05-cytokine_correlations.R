@@ -1,58 +1,54 @@
 # -----------------------------------------------------------------------------
-# Script 03: Human Plasma Metabolites & MSD Cytokines
+# Script 05: Human Plasma Metabolites & MSD Cytokines
 # Author: Rani Powers
-# Last updated: December 20, 2018
 #
-# Correlates Cohort 2 human plasma metabolomics data with MSD cytokine measurements.
-# Saves heatmaps and scatterplots in the Results/Figure_2/ folder. Outputs 
-# supplementary data to Results/Supplementary_Files/.
+# Performs differential analysis on human MSD data. Correlates human plasma 
+# metabolomics data with MSD cytokine measurements. Saves heatmaps and 
+# scatterplots in the Results/Figure_2/ folder. Outputs supplementary data to 
+# Results/Supplementary_Files/.
 # -----------------------------------------------------------------------------
 
 # Load libraries, color palettes and plotting functions
 source('R/helpers.R')
 source('R/heatmap.3.R')
 FDR_CUTOFF = .05
-if (!dir.exists('Results/Figure_2/')) { dir.create('Results/Figure_2/', recursive = T)}
-units = 'log2'
 
-# Get HTP metabolomics data
-eset = readRDS('Data/human_plasma_metabolomics_eset_cleaned.rds')
-sample_data = pData(eset)
-met_data = exprs(eset)
-feature_data = fData(eset)
+# Read human MSD data
+msd_data = read.csv('Data/Human_MSD.csv',
+                   stringsAsFactors = F,
+                   row.names = 1)
 
-# 67 samples have mesoscale discovery assay (MSD) data
-msd_data = readRDS('Data/human_MSD_data.rds')
-msd_data$Assay = NULL
-msd_samples = intersect(names(msd_data), names(met_data))
-msd_data = msd_data[,msd_samples]
-met_data = met_data[,msd_samples]
-sample_data = sample_data[msd_samples,]
+# Read human sample annotations
+sample_data = read.table('Data/All_sample_annotations.txt',
+                         stringsAsFactors = F, sep = '\t', header = T,
+                         row.names = 1)
+sample_data = sample_data[names(msd_data),]
+
+# Read human plasma data and subset to the individuals who also had MSD
+met_data = exprs(readRDS('Data/Human_plasma_metabolomics_eset_filtered.rds'))[,names(msd_data)]
 
 # Fit model on metabolomics data
 design = model.matrix(~0+Age+as.factor(Sex), sample_data[,c('Age', 'Sex')])
-met_data = removeBatchEffect(met_data, design = design)
+met_data2 = removeBatchEffect(met_data, covariates = design)
   
 # Fit model on MSD data
-fit_msd = lmFit(msd_data, design = design)
-msd_data = removeBatchEffect(msd_data, design = design)
+msd_data2 = removeBatchEffect(msd_data, covariates = design)
 
 # -----------------------
 
 # Correlate all metabolites and cytokines
 ALL_DATA = rbind(met_data, msd_data)
 data_for_correlation = as.data.frame(t(ALL_DATA))
-#data_for_correlation$Kyn_Tryp_ratio = data_for_correlation$C00328 - data_for_correlation$C00078
-
-t21 = sample_data[sample_data$Karyotype == 'T21', 'Barcode']
-d21 = sample_data[sample_data$Karyotype == 'D21', 'Barcode']
+data_for_correlation$Kyn_Tryp_ratio = data_for_correlation$C00328 - data_for_correlation$C00078
+t21 = row.names(sample_data[sample_data$Karyotype == 'T21',])
+d21 = row.names(sample_data[sample_data$Karyotype == 'D21',])
 
 # Correlation results
 all_correlation_results = data.frame(Measurement1 = 'A', Measurement2 = 'A',
                                      All_Spearman_Corr = 0, All_Spearman_Pval = 0,
                                      T21_Spearman_Corr = 0, T21_Spearman_Pval = 0,
                                      D21_Spearman_Corr = 0, D21_Spearman_Pval = 0)
-for (measurement1 in c('C00328')){
+for (measurement1 in c('Kyn_Tryp_ratio')){
   for (measurement2 in names(data_for_correlation)[92:ncol(data_for_correlation)]){
     cat(measurement2, '\n')
     all_corr = cor.test(data_for_correlation[,measurement1],
@@ -121,6 +117,7 @@ for (cytokine in c('TNF-A_Crnic_Proinflammatory', 'IP-10_Crnic_Chemokine',
 }
 
 # Plot heatmaps of MSD data (z-scored by D21 only data)
+msd_data = msd_data2 # use adjusted?
 d21_msd = msd_data[,sample_data$Karyotype == 'D21']
 mu = apply(d21_msd, 1, mean, na.rm = T)
 sigma = apply(d21_msd, 1, sd, na.rm = T)
@@ -133,7 +130,9 @@ for (i in 1:nrow(t21_msd)){
   t21_msd[i,] = as.numeric(t21_msd[i,] - mu[i])/sigma[i]
 }
 
-# KS test for all metabolites, D21 vs T21
+# KS test for all cytokines, D21 vs T21
+d21_msd = as.matrix(d21_msd)
+t21_msd = as.matrix(t21_msd)
 ks_test_results = data.frame(Cytokine = row.names(d21_msd),
                              D = sapply(1:nrow(d21_msd), function(i){
                                ks.test(d21_msd[i,], t21_msd[i,], exact = F)$statistic
@@ -148,8 +147,11 @@ ks_test_results$Adj_P_value = p.adjust(ks_test_results$P_value, method = 'fdr')
 ks_test_results = ks_test_results[order(ks_test_results$Adj_P_value, decreasing = F),]
 
 write.table(ks_test_results, 
-            paste0('Results/Supplementary_Files/Supp_Data_4_MSD_KStest.csv'), 
+            paste0('Results/Supplementary_Files/Supplementary_Data_13.csv'), 
             sep = ',', row.names = F)
+
+
+
 
 sig_cytokines2 = as.character(ks_test_results[ks_test_results$Adj_P_value < FDR_CUTOFF, 'Cytokine'])
 
